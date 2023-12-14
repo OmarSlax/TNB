@@ -1,9 +1,8 @@
 # Stage 1: Build the application with Maven
 FROM maven:3.6.3 AS build
 WORKDIR /app
-RUN ls -al
-COPY pom.xml ./
 COPY src ./src
+COPY pom.xml ./
 RUN mvn clean package -DskipTests
 
 # Stage 2: Create the final image with the compiled JAR
