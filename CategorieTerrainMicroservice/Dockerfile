@@ -1,8 +1,7 @@
 # Stage 1: Build the application with Maven
 FROM maven:3.6.3 AS build
 WORKDIR /app
-COPY src ./src
-COPY pom.xml ./
+COPY CategorieTerrainMicroservice/ .
 RUN mvn clean package -DskipTests
 
 # Stage 2: Create the final image with the compiled JAR
