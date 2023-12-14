@@ -1,13 +1,12 @@
 # Stage 1: Build the application with Maven
 FROM maven:3.6.3 AS build
 WORKDIR /app
-COPY pom.xml .
-COPY src ./src
+COPY CategorieTerrainMicroservice/pom.xml .
+COPY CategorieTerrainMicroservice/src ./src
 RUN mvn clean package -DskipTests
 
-# Stage 2: Create the final image with the compiled JAR
-FROM openjdk:17-alpine
+# Stage 2: Create the final image
+FROM openjdk:17-jre-slim
 WORKDIR /app
-COPY target/CategorieTerrainMicroservice*.jar /app/categorie-terrain-service.jar
-CMD ["java", "-jar", "categorie-terrain-service.jar"]
-EXPOSE 8082
+COPY --from=build /app/target/CategorieTerrainMicroservice.jar /app/CategorieTerrainMicroservice.jar
+CMD ["java", "-jar", "CategorieTerrainMicroservice.jar"]
