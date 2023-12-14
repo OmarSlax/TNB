@@ -32,9 +32,9 @@ pipeline {
             steps {
                 script {
                     // Run containers locally (adjust the port mappings and other options as needed)
-                    sh "docker run -d --name categorie-container -p 8081:8081 categorie-service"
-                    sh "docker run -d --name redevable-container -p 8082:8082 redevable-service"
-                    sh "docker run -d --name terrain-container -p 8083:8083 terrain-service"
+                    sh "docker run -d --name categorie-container -p 8082:8082 categorie-service"
+                    sh "docker run -d --name redevable-container -p 8081:8081 redevable-service"
+                    sh "docker run -d --name terrain-container -p 8084:8084 terrain-service"
                     sh "docker run -d --name discovery-container -p 8761:8761 discovery-service"
                 }
             }
