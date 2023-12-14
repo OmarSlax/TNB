@@ -1,0 +1,91 @@
+[19:25, 14/12/2023] يونس جعفري: version: '3'
+
+services:
+  discover-server:
+    build:
+      context: ./discovery_server
+      dockerfile: Dockerfile
+    ports:
+      - "8761:8761"
+    networks:
+      - TNB-network
+
+  redevable-service:
+    build:
+      context: ./RedevableMicroservice
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    depends_on:
+      - discover-server
+      - mysql
+    networks:
+      - TNB-network
+
+  categorie-service:
+    build:
+      context: ./CategorieTerrainMicroservice
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    depends_on:
+      - discover-server
+      - mysql
+    networks:
+      - TNB-network
+
+  terrain-service:
+    build:
+      context: ./TerrainMicroservice
+      dockerfile: Dockerfile
+    ports:
+      - "8084:8084"
+    depends_on:
+      - discover-server
+      - mysql
+    networks:
+      - TNB-network
+
+  mysql:
+    image: mariadb:latest
+    environment:
+      MYSQL_DATABASE: project_tnb
+      MYSQL_USER: yazoo
+      MYSQL_PASSWORD: yazooPassword
+      MYSQL_ROOT_PASSWORD: yazooPassword
+    restart: always
+    ports:
+      - "3306:3306"
+    networks:
+      - TNB-network
+
+networks:
+  TNB-network:
+    driver: bridge
+    # Add any additional configurations for your MySQL service here
+[19:25, 14/12/2023] يونس جعفري: # Stage 1: Build the application with Maven
+#FROM maven AS build
+#WORKDIR /app
+#COPY pom.xml .
+#COPY src ./src
+#RUN mvn clean package -DskipTests
+
+# Stage 2: Create the final image with the compiled JAR
+FROM openjdk:17-alpine
+WORKDIR /app
+COPY target/TerrainMicroservice*.jar /app/terrain-service.jar
+CMD ["java", "-jar", "terrain-service.jar"]
+EXPOSE 8084
+[19:26, 14/12/2023] يونس جعفري: # Stage 1: Build the application with Maven
+#FROM maven:3.6.3 AS build
+#WORKDIR /app
+#COPY pom.xml .
+#COPY src ./src
+#RUN mvn clean package -DskipTests
+
+# Stage 2: Create the final image with the compiled JAR
+FROM openjdk:17-alpine
+WORKDIR /app
+COPY target/RedevableMicroservice*.jar /app/redevable-service.jar
+CMD ["java", "-jar", "redevable-service.jar"]
+EXPOSE 8081
