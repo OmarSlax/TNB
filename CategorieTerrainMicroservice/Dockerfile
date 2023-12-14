@@ -1,7 +1,7 @@
 # Stage 1: Build the application with Maven
 FROM maven:3.6.3 AS build
 WORKDIR /app
-COPY pom.xml .
+COPY pom.xml ./
 COPY src ./src
 RUN mvn clean package -DskipTests
 
