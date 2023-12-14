@@ -1,13 +1,12 @@
 # Stage 1: Build the application with Maven
 FROM maven:3.6.3 AS build
 WORKDIR /app
-COPY pom.xml .
-COPY src ./src
+COPY RedevableMicroservice/pom.xml .
+COPY RedevableMicroservice/src ./src
 RUN mvn clean package -DskipTests
 
-# Stage 2: Create the final image with the compiled JAR
-FROM openjdk:17-alpine
+# Stage 2: Create the final image
+FROM openjdk:17-jre-slim
 WORKDIR /app
-COPY target/RedevableMicroservice*.jar /app/redevable-service.jar
-CMD ["java", "-jar", "redevable-service.jar"]
-EXPOSE 8081
+COPY --from=build /app/target/RedevableMicroservice.jar /app/RedevableMicroservice.jar
+CMD ["java", "-jar", "RedevableMicroservice.jar"]
